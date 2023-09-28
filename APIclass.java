@@ -1,9 +1,6 @@
 package com.acciojob.fristApi;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +10,27 @@ import java.util.List;
 public class APIclass {
 
     HashMap<Integer,UserInfo> userInfoDB=new HashMap<>();
-
+    @PostMapping("/addAsbody")
+    public String addBody(@RequestBody UserInfo obj){
+        int key=obj.getUserID();
+        userInfoDB.put(key,obj);
+        return "user added as JSON body";
+    }
+    @GetMapping("/getuserinfopath/{UserID}")
+    public UserInfo getuserpath(@PathVariable("UserID")Integer userID){
+        UserInfo obj=userInfoDB.get(userID);
+        return obj;
+    }
+    @GetMapping("/getage/{Greaterthan}/{Lessthan}")
+    public List<UserInfo> getfilter(@PathVariable("Greaterthan")int more,@PathVariable("Lessthan")int less){
+        List<UserInfo> list=new ArrayList<>();
+        for(UserInfo obj:userInfoDB.values()){
+            if(obj.getAge()>more && obj.getAge()<less){
+                list.add(obj);
+            }
+        }
+        return list;
+    }
     @PostMapping("/addUser")
     public String addusertoDB(@RequestParam("userID")Integer userID,
                               @RequestParam("name")String name,
